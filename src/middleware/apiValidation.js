@@ -20,7 +20,7 @@ export default function (req, res, next) {
       // add the user and pass to the
       req.decodedToken = decoded;
       // we keep track of the user and pass, but update the expiration date
-      req.refreshToken = jwt.sign(decoded, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES });
+      res.header('refreshed-token', jwt.sign(decoded, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES }));
       next();
     });
   } else {

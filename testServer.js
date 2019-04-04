@@ -16,12 +16,12 @@ let messages = [ // the only thing that we are changing+testing is "eventrainin"
 ];
 // test for no action from 0->0, test for action from 0->1, test for no action from 1->1, test for no action from 1->0
 
-app.listen(3001, () => {
-  console.log('Listening at Port 3001');
+app.get('/weather/getNextRoot', function (req, res) {
+  res.status(200).send({ nextRoot: mamState.channel.next_root });
 });
 
-app.post('/weather/getNextRoot', function (req, res) {
-  res.status(200).send({ nextRoot: mamState.channel.next_root });
+app.listen(3001, () => {
+  console.log('Listening at Port 3001');
 });
 
 // lets keep publishing the
@@ -35,7 +35,6 @@ setInterval(() => {
 }, 20000);
 
 async function _publish(trytes) {
-  const self = this;
   try {
     const message = Mam.create(mamState, trytes);
     // update and store the state

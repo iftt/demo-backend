@@ -2,24 +2,25 @@ const axios = require('axios');
 const weatherService = require('./test/weatherService.json');
 
 /** TEST **/
-// axios
-//   .post('http://192.168.0.46:3001/login')
-//   .then(function (response) {
-//     const token = response.data;
-//     axios
-//       .get('http://127.0.0.1:3001/', {
-//         headers: { 'x-access-token': token }
-//       })
-//       .then(function (response) {
-//         console.log(response.data);
-//       })
-//       .catch(function (error) {
-//         console.log(error);
-//       });
-//   })
-//   .catch(function (error) {
-//     console.log(error);
-//   });
+axios
+  .post('http://192.168.0.46:3001/login')
+  .then(function (response) {
+    const token = response.data;
+    axios
+      .get('http://127.0.0.1:3001/', {
+        headers: { 'x-access-token': token }
+      })
+      .then(function (response) {
+        console.log(response.data);
+        console.log(response.headers);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
 
 
 /** UPDATE DEVICE LOCATION **/
@@ -109,14 +110,14 @@ const weatherService = require('./test/weatherService.json');
 //   });
 
 /** GET NEXT ROOT **/
-axios
-  .post('http://192.168.0.46:3001/weather/getNextRoot')
-  .then(function (response) {
-    console.log(response.data);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
+// axios
+//   .post('http://192.168.0.46:3001/weather/getNextRoot')
+//   .then(function (response) {
+//     console.log(response.data);
+//   })
+//   .catch(function (error) {
+//     console.log(error);
+//   });
 
 /** CREATE A NEW SERVICE **/
 // axios

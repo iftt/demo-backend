@@ -30,8 +30,7 @@ export default function device(weatherGraph: WeatherGraph) {
       });
   });
 
-  router.post('/getNextRoot', (req, res) => {
-
+  router.get('/getNextRoot', (req, res) => {
     let state = weatherGraph.getMamState();
     if (state && state.channel && state.channel.next_root)
       res.status(200).send({ nextRoot: state.channel.next_root });
