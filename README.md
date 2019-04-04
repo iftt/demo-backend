@@ -1,11 +1,4 @@
-# demo-backend [![travis][travis-image]][travis-url] [![npm][npm-image]][npm-url] [![downloads][downloads-image]][downloads-url] [![Greenkeeper badge](https://badges.greenkeeper.io/IFTT/demo-backend.svg)](https://greenkeeper.io/)
-
-[travis-image]: https://travis-ci.org/IFTT/demo-backend.svg?branch=master
-[travis-url]: https://travis-ci.org/IFTT/demo-backend
-[npm-image]: https://img.shields.io/npm/v/@iftt/demo-backend.svg
-[npm-url]: https://npmjs.org/package/@iftt/demo-backend
-[downloads-image]: https://img.shields.io/npm/dm/@iftt/demo-backend.svg
-[downloads-url]: https://npmjs.org/package/@iftt/demo-backend
+# demo-backend 
 
 ## About
 
