@@ -1,5 +1,5 @@
 {
-  "name": "@iftt/skeleton-module",
+  "name": "@iftt/demo-backend",
   "version": "1.0.0",
   "description": "When creating new NodeJS modules, use this skeletal structure",
   "main": "lib/index.js",
@@ -12,23 +12,36 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/iftt/skeleton-module.git"
+    "url": "https://github.com/iftt/demo-backend.git"
   },
   "author": "Craig OConnor",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/IFTT/skeleton-module/issues"
+    "url": "https://github.com/IFTT/demo-backend/issues"
   },
-  "homepage": "https://github.com/IFTT/skeleton-module#readme",
+  "homepage": "https://github.com/IFTT/demo-backend#readme",
   "devDependencies": {
     "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.2.2",
+    "@babel/core": "^7.4.0",
     "@babel/plugin-syntax-flow": "^7.2.0",
     "@babel/preset-env": "^7.2.3",
     "@babel/preset-flow": "^7.0.0",
+    "axios": "^0.18.0",
     "babel-eslint": "^10.0.1",
     "eslint": "^4.0.0",
     "flow-bin": "^0.48.0",
     "tape": "^4.6.3"
+  },
+  "dependencies": {
+    "@iftt/mam": "^0.6.2",
+    "@iftt/tryte-buffer": "^1.1.2",
+    "@iota/area-codes": "^0.1.0",
+    "ambient-weather-api": "^0.0.6",
+    "dotenv": "^7.0.0",
+    "express": "^4.16.4",
+    "jsonwebtoken": "^8.5.1",
+    "level-rocksdb": "^3.0.1",
+    "redis": "^2.8.0",
+    "uuid.v4": "^1.0.0"
   }
 }

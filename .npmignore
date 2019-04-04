@@ -1,1 +1,5 @@
 src
+.env
+dump.rdb
+test
+./rocksdb
