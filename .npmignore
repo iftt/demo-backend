@@ -3,3 +3,5 @@ src
 dump.rdb
 test
 ./rocksdb
+ambientWeather.db
+iftt.db

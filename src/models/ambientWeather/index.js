@@ -4,7 +4,7 @@ import * as iotaAreaCodes            from '@iota/area-codes';
 import * as Mam                      from '@iftt/mam';
 import TryteBuffer                   from '@iftt/tryte-buffer';
 import weatherProtocol               from './weatherProtocol.json';
-import Redis                         from 'redis';
+import NedDB                         from 'nedb';
 
 require('dotenv').config(); // .env variables
 
@@ -13,19 +13,16 @@ class WeatherGraph extends AmbientWeather {
     super(ambientWeatherOptions);
     this.ambientWeatherApi.connect();
     this.tryteBuffer = new TryteBuffer(weatherProtocol);
-    this.redisClient = Redis.createClient();
+    this.dbClient = new NedDB({ filename: './ambientWeather.db', autoload: true });
     if (tangleLocation === 'https://nodes.devnet.thetangle.org:443')
       this.minWeightMagnitude = 9;
     else
       this.minWeightMagnitude = 14;
     // setup MAM, and if there is a recorded latest state, let's grab it
     this.mamState = Mam.init(tangleLocation, process.env.WEATHER_TANGLE_SEED);
-    this.redisClient.get('mamstate', (err, state) => {
-      if (!err) {
-        state = JSON.parse(state);
-        if (state)
-          this.mamState = state;
-      }
+    this.dbClient.findOne({ key: 'mamstate' }, (err, doc) => {
+      if (!err && doc)
+        this.mamState = doc.state;
     });
   }
 
@@ -36,19 +33,10 @@ class WeatherGraph extends AmbientWeather {
   _getAllSubscriptions() {
     const self = this;
     let apis = [];
-    self.redisClient.keys('*', (err, keys) => {
-      if (!err) {
-        async function getDevices() {
-          for (let i = 0; i < keys.length; i++) {
-            let key = keys[i];
-            let device = await self.getDevice(key);
-            if (device && device.apiKey)
-              apis.push(device.apiKey);
-          }
-          if (apis.length)
-            self._subscribe(apis);
-        }
-        getDevices();
+    self.dbClient.find({ subscription: true }, (err, docs) => {
+      if (!err && docs.length) {
+        let apis = docs.map(doc => { return doc.apiKey; });
+        self._subscribe(apis);
       }
     });
   }
@@ -56,10 +44,10 @@ class WeatherGraph extends AmbientWeather {
   getDevice(device) {
     const self = this;
     return new Promise(res => {
-      self.redisClient.get(device, (err, state) => {
+      self.dbClient.findOne({ macAddress: device.macAddress }, (err, doc) => {
         if (err)
           res(null);
-        res(JSON.parse(state));
+        res(doc);
       });
     });
   }
@@ -84,24 +72,24 @@ class WeatherGraph extends AmbientWeather {
             rej('Bad api');
           } else {
             // save to a short term dataset and the database
-            const sub = subscriptions.devices.filter(sub => sub.apiKey === api)[0];
-            const iac = iotaAreaCodes.encode(geo.lat, geo.lon, iotaAreaCodes.CodePrecision.EXTRA);
-            const codeArea = iotaAreaCodes.decode(iac);
-            const olc = iotaAreaCodes.toOpenLocationCode(iac);
-            let device = {
-              geometry: { type: 'Point', coordinates: [geo.lon, geo.lat] },
-              creationDate: new Date(),
-              info: sub.info,
-              macAddress: sub.macAddress,
-              apiKey: api,
-              deviceId: sub.lastData.deviceId,
-              plusCode: olc,
-              iotaAreaCode: iac,
-              bounds: { maxLat: codeArea.latitudeHigh, minLat: codeArea.latitudeLow, maxLon: codeArea.longitudeHigh, minLon: codeArea.longitudeLow }
-            };
-            device = JSON.stringify(device);
-            self.redisClient.set(sub.macAddress, device);
-            // TODO: add to mongoDB weatherStation store (not part of demo)
+            subscriptions.devices.forEach(sub => {
+              const iac = iotaAreaCodes.encode(geo.lat, geo.lon, iotaAreaCodes.CodePrecision.EXTRA);
+              const codeArea = iotaAreaCodes.decode(iac);
+              const olc = iotaAreaCodes.toOpenLocationCode(iac);
+              const device = {
+                geometry: { type: 'Point', coordinates: [geo.lon, geo.lat] },
+                creationDate: new Date(),
+                info: sub.info,
+                macAddress: sub.macAddress,
+                apiKey: api,
+                deviceId: sub.lastData.deviceId,
+                plusCode: olc,
+                iotaAreaCode: iac,
+                bounds: { maxLat: codeArea.latitudeHigh, minLat: codeArea.latitudeLow, maxLon: codeArea.longitudeHigh, minLon: codeArea.longitudeLow }
+              };
+              self.dbClient.update({ macAddress: device.macAddress }, device, { upsert: true });
+              self.dbClient.update({ apiKey: api }, { apiKey: api, subscription: true }, { upsert: true });
+            });
             res(null);
           }
         });
@@ -118,16 +106,11 @@ class WeatherGraph extends AmbientWeather {
       }, 7000);
       self.ambientWeatherApi.once('subscribed', subscriptions => {
         clearTimeout(noresponseTimer);
-        // TODO: if successful return null, otherwise error
         if (subscriptions.method === 'unsubscribe') {
           // find the device and unsubscribe
-          self._delDeviceIfApi(api)
-            .then(() => {
-              res(null);
-            })
-            .catch(err => {
-              rej('unable to find device', err);
-            });
+          self._delFromApi(api)
+            .then(() => { res(null); })
+            .catch(err => { rej('unable to find any devices associated with api', err); });
         } else {
           res(null);
         }
@@ -136,24 +119,13 @@ class WeatherGraph extends AmbientWeather {
     });
   }
 
-  _delDeviceIfApi(api: string) {
+  _delFromApi(api: string) {
     const self = this;
     return new Promise((res, rej) => {
-      self.redisClient.keys('*', (err, keys) => {
-        if (!err) {
-          async function findDevicesAndDel() {
-            for (let i = 0; i < keys.length; i++) {
-              let key = keys[i];
-              let device = await self.getDevice(key);
-              if (device && device.apiKey && device.apiKey === api)
-                self.redisClient.del(device.macAddress);
-            }
-            res(null);
-          }
-          findDevicesAndDel();
-        } else {
+      self.dbClient.remove({ apiKey: api }, { multi: true }, (err, numRemoved) => { // this will remove the device(s) and subscription
+        if (err || !numRemoved)
           rej(err);
-        }
+        res(null);
       });
     });
   }
@@ -161,9 +133,8 @@ class WeatherGraph extends AmbientWeather {
   _onWeatherUpdate(update) {
     const self = this;
     // check redisClient, if station exists we submit the update to mongo AND the tangle
-    self.redisClient.get(update.macAddress, (err, station) => {
+    self.dbClient.findOne({ macAddress: update.macAddress }, (err, station) => {
       if (!err && station) {
-        station = JSON.parse(station);
         update.date = new Date(update.date);
         update.lastRain = new Date(update.lastRain);
         update.location = {
@@ -182,15 +153,11 @@ class WeatherGraph extends AmbientWeather {
       const message = Mam.create(self.mamState, trytes);
       // update and store the state
       self.mamState = message.state;
-      self.redisClient.set('mamstate', JSON.stringify(self.mamState));
       await Mam.attach(message.payload, message.address, 3, self.minWeightMagnitude, tag);
-      // console.log('uploaded!', trytes);
+      self.dbClient.update({ key: 'mamstate' }, { key: 'mamstate', state: self.mamState }, { upsert: true });
       console.log('Root:', message.root);
     } catch(err) {}
   }
-
-  // TODO (not for demo): instead of insta-publishing, store in an array.
-  // If there is more than 100 OR 5 minutes have passed, publish
 }
 
 export default WeatherGraph;

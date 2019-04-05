@@ -1,15 +1,16 @@
 // @flow
-import RocksDB from './rocksDB';
+import NedDB from './nedDB';
 import WeatherGraph from './ambientWeather';
 
 export class Models {
-  rocksDB: RocksDB;
+  nedDB: NedDB;
+  weatherGraph: WeatherGraph;
   constructor() {
-    this.rocksDB      = new RocksDB(this);
+    this.nedDB        = new NedDB(this);
     this.weatherGraph = new WeatherGraph(this);
   }
 }
 
 export default Models;
-export { default as RocksDB }      from './rocksDB';
+export { default as NedDB }        from './nedDB';
 export { default as WeatherGraph } from './ambientWeather';

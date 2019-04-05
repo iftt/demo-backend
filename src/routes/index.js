@@ -9,7 +9,7 @@ import login   from './login';
 import service from './service';
 
 const models = new Models();
-const { rocksDB, weatherGraph } = models;
+const { nedDB, weatherGraph } = models;
 const router = Router();
 
 router.get('/', (req, res) => {
@@ -19,7 +19,7 @@ router.get('/', (req, res) => {
 export default function setRoutes(app: express) {
   app.use('/', router);
   app.use('/', login());
-  app.use('/device', device(rocksDB));
-  app.use('/service', service(rocksDB));
+  app.use('/device', device(nedDB));
+  app.use('/service', service(nedDB));
   app.use('/weather', weather(weatherGraph));
 }
