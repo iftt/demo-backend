@@ -1,13 +1,16 @@
 const axios = require('axios');
 const weatherService = require('./test/weatherService.json');
 
+const address = '192.168.0.46';
+const port = 3001;
+
 /** TEST **/
 // axios
-//   .post('http://192.168.0.46:3001/login')
+//   .post(`http://${address}:${port}/login`)
 //   .then(function (response) {
 //     const token = response.data;
 //     axios
-//       .get('http://127.0.0.1:3001/', {
+//       .get(`http://${address}:${port}/`, {
 //         headers: { 'x-access-token': token }
 //       })
 //       .then(function (response) {
@@ -25,11 +28,11 @@ const weatherService = require('./test/weatherService.json');
 
 /** UPDATE DEVICE LOCATION **/
 // axios
-//   .post('http://192.168.0.46:3001/login')
+//   .post(`http://${address}:${port}/login`)
 //   .then(function (response) {
 //     const token = response.data;
 //     axios
-//       .post('http://127.0.0.1:3001/device/updateDeviceLocation', {
+//       .post(`http://${address}:${port}/device/updateDeviceLocation`, {
 //         token,
 //         deviceId: 'abcdefg'
 //       })
@@ -47,11 +50,11 @@ const weatherService = require('./test/weatherService.json');
 
 /** GET DEVICE **/
 // axios
-//   .post('http://192.168.0.46:3001/login')
+//   .post(`http://${address}:${port}/login`)
 //   .then(function (response) {
 //     const token = response.data;
 //     axios
-//       .post('http://127.0.0.1:3001/device/getDevice', {
+//       .post(`http://${address}:${port}/device/getDevice`, {
 //         token,
 //         deviceId: 'abcdefg'
 //       })
@@ -68,11 +71,11 @@ const weatherService = require('./test/weatherService.json');
 
 /** SUBSCRIBE WEATHER STATION **/
 // axios
-//   .post('http://192.168.0.46:3001/login')
+//   .post(`http://${address}:${port}/login`)
 //   .then(function (response) {
 //     const token = response.data;
 //     axios
-//       .post('http://127.0.0.1:3001/weather/subscribe', {
+//       .post(`http://${address}:${port}/weather/subscribe`, {
 //         token,
 //         geo: { lon: -78.632560, lat: 35.523086 },
 //         apiKey: 'e4577289bec84a09aa12094c4b3eac071c733dbc80834fc5a8d02fe84d641dcb'
@@ -89,29 +92,29 @@ const weatherService = require('./test/weatherService.json');
 //   });
 
 /** UNSUBSCRIBE WEATHER STATION **/
-axios
-  .post('http://192.168.0.46:3001/login')
-  .then(function (response) {
-    const token = response.data;
-    axios
-      .post('http://127.0.0.1:3001/weather/unsubscribe', {
-        token,
-        apiKey: 'e4577289bec84a09aa12094c4b3eac071c733dbc80834fc5a8d02fe84d641dcb'
-      })
-      .then(function (response) {
-        console.log(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
+// axios
+//   .post(`http://${address}:${port}/login`)
+//   .then(function (response) {
+//     const token = response.data;
+//     axios
+//       .post(`http://${address}:${port}/weather/unsubscribe`, {
+//         token,
+//         apiKey: 'e4577289bec84a09aa12094c4b3eac071c733dbc80834fc5a8d02fe84d641dcb'
+//       })
+//       .then(function (response) {
+//         console.log(response.data);
+//       })
+//       .catch(function (error) {
+//         console.log(error);
+//       });
+//   })
+//   .catch(function (error) {
+//     console.log(error);
+//   });
 
 /** GET NEXT ROOT **/
 // axios
-//   .get('http://192.168.0.46:3001/weather/getNextRoot')
+//   .get(`http://${address}:${port}/weather/getNextRoot')
 //   .then(function (response) {
 //     console.log(response.data);
 //   })
@@ -121,11 +124,11 @@ axios
 
 /** CREATE A NEW SERVICE **/
 // axios
-//   .post('http://192.168.0.46:3001/login')
+//   .post(`http://${address}:${port}/login')
 //   .then(function (response) {
 //     const token = response.data;
 //     axios
-//       .post('http://192.168.0.46:3001/service/createService', {
+//       .post(`http://${address}:${port}/service/createService`, {
 //         token,
 //         service: weatherService
 //       })
@@ -143,22 +146,22 @@ axios
 
 // Weather Service ID: 86591f76-d3e7-47e4-9d85-e3731101c4ae
 /** GET WEATHER SERVICE **/
-axios
-  .post('http://192.168.0.46:3001/login')
-  .then(function (response) {
-    const token = response.data;
-    axios
-      .post('http://192.168.0.46:3001/service/getService', {
-        token,
-        serviceId: '86591f76-d3e7-47e4-9d85-e3731101c4ae'
-      })
-      .then(function (response) {
-        console.log(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
+// axios
+//   .post(`http://${address}:${port}/login`)
+//   .then(function (response) {
+//     const token = response.data;
+//     axios
+//       .post(`http://${address}:${port}/service/getService`, {
+//         token,
+//         serviceId: '86591f76-d3e7-47e4-9d85-e3731101c4ae'
+//       })
+//       .then(function (response) {
+//         console.log(response.data);
+//       })
+//       .catch(function (error) {
+//         console.log(error);
+//       });
+//   })
+//   .catch(function (error) {
+//     console.log(error);
+//   });
