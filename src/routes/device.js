@@ -23,9 +23,9 @@ export default function device(nedDB: NedDB) {
   router.post('/createDevice', (req, res) => {
     let { deviceId, deviceProtocol } = req.body;
 
-    nedDB.getDevice(deviceId, (err, value) => {
+    nedDB.createDevice(deviceId, (err, value) => {
       if (err)
-        res.status(417).send({ error: true, message: 'Could not get your device', errorMessage: err });
+        res.status(417).send({ error: true, message: 'Could not create your device', errorMessage: err });
       else
         res.status(200).send(value);
     });
@@ -43,13 +43,13 @@ export default function device(nedDB: NedDB) {
   });
 
   router.post('/programDevice', (req, res) => {
-    let { deviceId, instructionSet } = req.body;
+    let { deviceId, instructions } = req.body;
 
-    nedDB.programDevice(deviceId, instructionSet, err => {
+    nedDB.programDevice(deviceId, instructions, err => {
       if (err)
         res.status(417).send({ error: true, message: 'Could not program your device', errorMessage: err });
       else
-        res.status(200).send({ deviceId, instructionSet });
+        res.status(200).send({ success: true, deviceId, instructions });
     });
   });
 

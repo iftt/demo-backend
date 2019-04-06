@@ -2,16 +2,23 @@
 import Models     from '../';
 import NedDBStore from 'nedb';
 import uuidv4     from 'uuid.v4';
+import ioClient   from 'socket.io-client';
 
-// type IPTable = {
-//   ipv4: string,
-//   ipv6: string
-// }
+export type Instructions = {
+  serviceId: string,
+  service: Service,
+  program: Program
+};
 
 type Service = {
-  protocol: Object,
-  getRoot: String
-}
+  protocol: { string: { string: any } },
+  getRoot: string
+};
+
+type Program = {
+  condition: Object,
+  action: { key: string, value: any }
+};
 
 // Setup the deepstream server
 class NedDB { // NedDB
@@ -26,6 +33,8 @@ class NedDB { // NedDB
     return this.nedDB.findOne({ deviceId }, (err, device) => {
       if (err)
         return cb(err, null);
+      if (!device)
+        device = { deviceId };
       device.ip = ip;
       this.nedDB.update({ deviceId }, device, { upsert: true, returnUpdatedDocs: true }, (err, numUpdated, newDoc) => {
         cb(err, newDoc);
@@ -44,19 +53,40 @@ class NedDB { // NedDB
     return this.nedDB.findOne({ serviceId }, (err, doc) => { cb(err, doc) });
   }
 
+  createDevice(deviceId: string, deviceProtocol: { string: Object }) {
+    return this.nedDB.findOne({ deviceId }, (err, device) => {
+      if (err)
+        device = { deviceId, deviceProtocol };
+      else
+        device.deviceProtocol = deviceProtocol;
+      this.nedDB.update({ deviceId }, device, { upsert: true, returnUpdatedDocs: true }, (err, numUpdated, newDoc) => {
+        cb(err, newDoc);
+      });
+    });
+  }
+
   getDevice(deviceId: string, cb: Function) {
     return this.nedDB.findOne({ deviceId }, (err, doc) => { cb(err, doc) });
   }
 
-  programDevice(deviceId: string, instructionSet: object, cb: Function): string | null {
+  programDevice(deviceId: string, instructions: [Instructions], cb: Function): string | null {
     // update store for device to include current programming and then contact the device to ensure it gets the instruction set
     return this.nedDB.findOne({ deviceId }, (err, device) => {
       if (err)
         return cb(err, null);
-      device.instructionSet = instructionSet;
-      this.nedDB.update({ deviceId }, device, { upsert: true, returnUpdatedDocs: true }, (err, numUpdated, newDoc) => {
-        cb(err, newDoc);
-      });
+      device.instructions = instructions;
+      try {
+        const socketClient = ioClient.connect(`http://${device.ip}:8001`);
+        socketClient.on('ready', client => {
+          socketClient.emit('program', instructions);
+          this.nedDB.update({ deviceId }, device, { upsert: true, returnUpdatedDocs: true }, (err, numUpdated, newDoc) => {
+            cb(err, newDoc);
+          });
+          socketClient.close();
+        });
+      } catch (err) {
+        cb(err);
+      }
     });
   }
 }

@@ -56,7 +56,7 @@ const port = 3001;
 //     axios
 //       .post(`http://${address}:${port}/device/getDevice`, {
 //         token,
-//         deviceId: 'abcdefg'
+//         deviceId: '477a5971-3e9d-4eae-98fe-22cb4c153dc1'
 //       })
 //       .then(function (response) {
 //         console.log(response.data);

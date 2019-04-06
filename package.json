@@ -8,6 +8,7 @@
     "lint": "echo linting... && eslint ./src/**/*.js && echo 'successfully linted'",
     "build": "echo building... && babel src/ -d lib/ && echo 'successfully built'",
     "prepublish": "yarn run build",
+    "runServer": "node ./lib/index",
     "test": "echo running server tests... && tape test/**/*.js | tap-summary && echo 'successfully completed tests'"
   },
   "repository": {

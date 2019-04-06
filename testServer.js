@@ -16,8 +16,16 @@ let messages = [ // the only thing that we are changing+testing is "eventrainin"
 ];
 // test for no action from 0->0, test for action from 0->1, test for no action from 1->1, test for no action from 1->0
 
-app.get('/weather/getNextRoot', function (req, res) {
+app.get('/weather/getNextRoot', (req, res) => {
   res.status(200).send({ nextRoot: mamState.channel.next_root });
+});
+
+app.post('/login', (req, res) => {
+  res.status(200).send('tokenLOL');
+});
+
+app.post('/device/updateDeviceLocation', (req, res) => {
+  res.status(200).send({});
 });
 
 app.listen(3001, () => {
