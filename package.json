@@ -5,11 +5,11 @@
   "main": "lib/index.js",
   "scripts": {
     "lint+build+test": "yarn run lint && yarn run build && yarn run test",
-    "lint": "echo linting... && eslint ./src/**/*.js && echo 'successfully linted'",
+    "lint": "echo linting... && standard ./src/**/*.js && echo 'successfully linted'",
     "build": "echo building... && babel src/ -d lib/ && echo 'successfully built'",
     "prepublish": "yarn run build",
     "runServer": "node ./lib/index",
-    "test": "echo running server tests... && tape test/**/*.js | tap-summary && echo 'successfully completed tests'"
+    "test": "echo running server tests... && standard && tape test/**/*.js | tap-summary && echo 'successfully completed tests'"
   },
   "repository": {
     "type": "git",
