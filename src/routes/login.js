@@ -1,15 +1,17 @@
 // @flow
-import express, { Router } from 'express';
-import { RocksDB } from '../models';
-import jwt from 'jsonwebtoken';
+import { Router } from 'express'
+import jwt from 'jsonwebtoken'
 
-const router = Router();
+const debug = require('debug')('demo-backend:login')
 
-export default function login() {
+const router = Router()
+
+export default function login () {
   router.post('/login', (req, res) => {
-    const token = jwt.sign({ user: 'User' }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES });
-    res.status(200).send(token);
-  });
+    debug('[post] /login')
+    const token = jwt.sign({ user: 'User' }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES })
+    res.status(200).send(token)
+  })
 
-  return router;
+  return router
 }

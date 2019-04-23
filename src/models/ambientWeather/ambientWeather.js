@@ -1,62 +1,79 @@
 // @flow
-import Models            from '../';
-import AmbientWeatherApi from 'ambient-weather-api'; // https://ambientweather.docs.apiary.io/#reference/ambient-realtime-api
+import AmbientWeatherApi from 'ambient-weather-api' // https://ambientweather.docs.apiary.io/#reference/ambient-realtime-api
+
+const debug = require('debug')('ambient-weather')
 
 export type AWOptions = {
   apiKey: string,
   applicationKey: string
-};
+}
 
 class AmbientWeather {
-  ambientWeatherApi: AmbientWeatherApi;
+  ambientWeatherApi: AmbientWeatherApi
+  constructor (ambientWeatherOptions: null | AWOptions) {
+    debug('creating AmbientWeather')
+    const apiKey = (process.env.WEATHER_API)
+      ? process.env.WEATHER_API
+      : (ambientWeatherOptions && ambientWeatherOptions.apiKey)
+        ? ambientWeatherOptions.apiKey
+        : null
 
-  constructor(models: Models, ambientWeatherOptions: AWOptions) {
-    this.models  = models;
-    this.ambientWeatherApi = new AmbientWeatherApi({
-      apiKey: process.env.WEATHER_API || ambientWeatherOptions.apiKey,
-      applicationKey: process.env.WEATHER_APP_API || ambientWeatherOptions.applicationKey
-    });
+    const applicationKey = (process.env.WEATHER_APP_API)
+      ? process.env.WEATHER_APP_API
+      : (ambientWeatherOptions && ambientWeatherOptions.applicationKey)
+        ? ambientWeatherOptions.applicationKey
+        : null
+    this.ambientWeatherApi = new AmbientWeatherApi({ apiKey, applicationKey })
     this.ambientWeatherApi.on('connect', () => {
-      console.log('Connected to Ambient Weather Realtime API.');
-      if (this._onWeatherConnect)
-        this._onWeatherConnect();
-    });
+      console.log('Connected to Ambient Weather Realtime API.')
+      this._onWeatherConnect()
+    })
     this.ambientWeatherApi.on('data', device => {
-      if (this._onWeatherUpdate)
-        this._onWeatherUpdate(device);
-    });
+      this._onWeatherUpdate(device)
+    })
     this.ambientWeatherApi.on('subscribed', subscriptions => {
-      if (this._onSubscriptionUpdate)
-        this._onSubscriptionUpdate(subscriptions);
-    });
+      this._onSubscriptionUpdate(subscriptions)
+    })
   }
 
-  _connect() {
-    this.ambientWeatherApi.connect();
+  _onWeatherConnect (): void {}
+
+  _onWeatherUpdate (device: Object): void {}
+
+  _onSubscriptionUpdate (subscriptions: Object): void {}
+
+  _connect (): void {
+    debug('_connect')
+    this.ambientWeatherApi.connect()
   }
 
-  _disconnect() {
-    this.ambientWeatherApi.disconnect();
+  _disconnect (): void {
+    debug('_disconnect')
+    this.ambientWeatherApi.disconnect()
   }
 
-  _subscribe(apiKeys: Array<string> | string) {
-    this.ambientWeatherApi.subscribe(apiKeys);
+  _subscribe (apiKeys: Array<string> | string): void {
+    debug('_subscribe')
+    this.ambientWeatherApi.subscribe(apiKeys)
   }
 
-  _unsubscribe(apiKeys: Array<string> | string) {
-    this.ambientWeatherApi.unsubscribe(apiKeys);
+  _unsubscribe (apiKeys: Array<string> | string): void {
+    debug('_unsubscribe')
+    this.ambientWeatherApi.unsubscribe(apiKeys)
   }
 
-  _devices(): Promise {
-    return this.ambientWeatherApi.userDevices();
+  _devices (): Promise<any> {
+    debug('_devices')
+    return this.ambientWeatherApi.userDevices()
   }
 
-  _deviceData(macAddress: string): Promise {
-    return this.ambientWeatherApi.deviceData(macAddress);
+  _deviceData (macAddress: string): Promise<any> {
+    debug('_deviceData')
+    return this.ambientWeatherApi.deviceData(macAddress)
   }
 }
 
-export default AmbientWeather;
+export default AmbientWeather
 
 // example 'on data'
 // weather update { dateutc: 1552890180000,
