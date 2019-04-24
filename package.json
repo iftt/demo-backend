@@ -1,6 +1,6 @@
 {
   "name": "@iftt/demo-backend",
-  "version": "1.3.5",
+  "version": "1.3.7",
   "description": "When creating new NodeJS modules, use this skeletal structure",
   "main": "lib/index.js",
   "scripts": {

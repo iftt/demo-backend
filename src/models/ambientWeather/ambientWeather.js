@@ -10,7 +10,7 @@ export type AWOptions = {
 
 class AmbientWeather {
   ambientWeatherApi: AmbientWeatherApi
-  constructor (ambientWeatherOptions: null | AWOptions) {
+  constructor (ambientWeatherOptions?: AWOptions) {
     debug('creating AmbientWeather')
     const apiKey = (process.env.WEATHER_API)
       ? process.env.WEATHER_API
