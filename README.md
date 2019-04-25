@@ -10,18 +10,18 @@ These are some of the main modules that make up the IFTT project:
 
 | module | tests | version | description |
 |---|---|---|---|
-| **[demo-server][demo-server]** | [![][demo-server-ti]][demo-server-tu] | [![][demo-server-ni]][demo-server-nu] | **IFTT Server (this module)**
+| **[demo-backend][demo-backend]** | [![][demo-backend-ti]][demo-backend-tu] | [![][demo-backend-ni]][demo-backend-nu] | **IFTT Server (this module)**
 | **[tryte-encode-decode][tryte-encode-decode]** | [![][tryte-encode-decode-ti]][tryte-encode-decode-tu] | [![][tryte-encode-decode-ni]][tryte-encode-decode-nu] | data<-->trytes
 | [tryte-buffer][tryte-buffer] | [![][tryte-buffer-ti]][tryte-buffer-tu] | [![][tryte-buffer-ni]][tryte-buffer-nu] | json<-->Trytes
 | [program-generator][program-generator] | [![][program-generator-ti]][program-generator-tu] | [![][program-generator-ni]][program-generator-nu] | create programs from user defined json
 | [icc-fpga-protocol][icc-fpga-protocol] | [![][icc-fpga-protocol-ti]][icc-fpga-protocol-tu] | [![][icc-fpga-protocol-ni]][icc-fpga-protocol-nu] | POW with an fpga device
 | [garage-client][garage-client] | [![][garage-client-ti]][garage-client-tu] | [![][garage-client-ni]][garage-client-nu] | open/close garage with IOTA tangle
 
-[demo-server]: https://github.com/iftt/demo-server
-[demo-server-ti]: https://travis-ci.org/iftt/demo-server.svg?branch=master
-[demo-server-tu]: https://travis-ci.org/iftt/demo-server
-[demo-server-ni]: https://img.shields.io/npm/v/@iftt/demo-server.svg
-[demo-server-nu]: https://npmjs.org/package/@iftt/demo-server
+[demo-backend]: https://github.com/iftt/demo-backend
+[demo-backend-ti]: https://travis-ci.org/iftt/demo-backend.svg?branch=master
+[demo-backend-tu]: https://travis-ci.org/iftt/demo-backend
+[demo-backend-ni]: https://img.shields.io/npm/v/@iftt/demo-backend.svg
+[demo-backend-nu]: https://npmjs.org/package/@iftt/demo-backend
 
 [tryte-encode-decode]: https://github.com/iftt/tryte-encode-decode
 [tryte-encode-decode-ti]: https://travis-ci.org/iftt/tryte-encode-decode.svg?branch=master
