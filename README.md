@@ -2,7 +2,67 @@
 
 ## About
 
-This is an example backend server to promote the IOTA network. Although
+This is an example implementation of services and devices on the IOTA network using a weather station, FPGA, and a garage door opener. The IOTA network is still a young protocol with a lot of room for interpretation on how to best utilize it. While there have been attempts to market data for financial gain, I believe the more practical application lies in the sale of IoT devices with an ASIC POW chip to talk on the IOTA network effortlessly.
+
+This demo server is essentially a means of managing devices and how they interact with the IOTA tangle.
+
+## Install
+```sh
+# yarn
+yarn add @iftt/demo-backend
+# npm
+npm i --save @iftt/demo-backend
+```
+
+## How to use
+
+### Create Environment file
+create a file called `.env` with these keys and replacing the variables:
+```
+PORT=3001
+JWT_SECRET=m7ugp0jKc4RoRJvXtnCJrETheIRZENay
+JWT_EXPIRES=15d
+WEATHER_API=00000000bec84a09aa12094c4b3eac071c733dbc80834fc5a8d02fe840000000
+WEATHER_APP_API=000000005ac24e28a5d6f76bb4b710c4fa5c76f1129b4002905afe31c0000000
+WEATHER_TANGLE_SEED=I9XZHZETFFDYRWISYGGONGSULUTERQXQYZRALTNXWXQMRIORUSTTCKJVYNHCBWKGSDVEKIBXMQMOJKPQBX
+```
+
+#### How to generate a unique JWT secret
+```sh
+# Linux
+cat /dev/urandom |tr -dc a-zA-Z0-9|head -c${1:-32}
+# OS X
+cat /dev/urandom |LC_ALL=C tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1
+```
+
+#### How to generate a unique IOTA seed
+```sh
+# Linux
+cat /dev/urandom |tr -dc A-Z9|head -c${1:-81}
+# OS X
+cat /dev/urandom |LC_ALL=C tr -dc 'A-Z9' | fold -w 81 | head -n 1
+```
+
+### Create the NodeJS server
+
+#### Option 1: download this repository and run from the lib
+```sh
+# clone the repo
+git clone https://github.com/iftt/demo-backend.git
+# install dependences
+yarn # or npm install
+# run the server
+yarn run runServer  # npm run runServer
+```
+
+#### Option 2: install the npm package and run
+After installing the package, create a JS file and input the following
+```js
+// ES6
+import '@iftt/demo-backend'
+// ES5
+require('@iftt/demo-backend')
+```
 
 ## Modules
 
@@ -11,7 +71,7 @@ These are some of the main modules that make up the IFTT project:
 | module | tests | version | description |
 |---|---|---|---|
 | **[demo-backend][demo-backend]** | [![][demo-backend-ti]][demo-backend-tu] | [![][demo-backend-ni]][demo-backend-nu] | **IFTT Server (this module)**
-| **[tryte-encode-decode][tryte-encode-decode]** | [![][tryte-encode-decode-ti]][tryte-encode-decode-tu] | [![][tryte-encode-decode-ni]][tryte-encode-decode-nu] | data<-->trytes
+| [tryte-encode-decode][tryte-encode-decode] | [![][tryte-encode-decode-ti]][tryte-encode-decode-tu] | [![][tryte-encode-decode-ni]][tryte-encode-decode-nu] | data<-->trytes
 | [tryte-buffer][tryte-buffer] | [![][tryte-buffer-ti]][tryte-buffer-tu] | [![][tryte-buffer-ni]][tryte-buffer-nu] | json<-->Trytes
 | [program-generator][program-generator] | [![][program-generator-ti]][program-generator-tu] | [![][program-generator-ni]][program-generator-nu] | create programs from user defined json
 | [icc-fpga-protocol][icc-fpga-protocol] | [![][icc-fpga-protocol-ti]][icc-fpga-protocol-tu] | [![][icc-fpga-protocol-ni]][icc-fpga-protocol-nu] | POW with an fpga device
