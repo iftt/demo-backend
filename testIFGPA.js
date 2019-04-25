@@ -2,9 +2,7 @@ const SerialPort = require('serialport')
 const { asciiToTrytes } = require('@iota/converter')
 const Mam = require('@iota/mam')
 
-const port = new SerialPort('/dev/tty.usbserial-210352A82EDB1', {
-  baudRate: 115200
-})
+const port = new SerialPort('/dev/tty.usbserial-210352A82EDB1', { baudRate: 115200 })
 
 port.on('open', () => {
   console.log('port is open!')
