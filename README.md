@@ -52,7 +52,7 @@ git clone https://github.com/iftt/demo-backend.git
 # install dependences
 yarn # or npm install
 # run the server
-yarn run runServer  # npm run runServer
+yarn run server  # npm run server
 ```
 
 #### Option 2: install the npm package and run

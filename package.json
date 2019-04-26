@@ -1,14 +1,14 @@
 {
   "name": "@iftt/demo-backend",
-  "version": "1.3.9",
+  "version": "1.3.10",
   "description": "When creating new NodeJS modules, use this skeletal structure",
   "main": "lib/index.js",
   "scripts": {
     "lint+build+test": "yarn run lint && yarn run build && yarn run test",
     "lint": "echo linting... && standard ./src/**/*.js && echo 'successfully linted'",
-    "build": "echo building... && babel src/ -d lib/ && echo 'successfully built'",
+    "build": "echo building... && babel src/ -d lib/ --source-maps inline --copy-files && echo 'successfully built'",
     "prepublish": "yarn run build",
-    "runServer": "node ./lib/index",
+    "server": "node ./lib/index",
     "test": "echo running server tests... && standard && tape test/**/*.js | tap-summary && echo 'successfully completed tests'"
   },
   "repository": {
