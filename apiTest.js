@@ -76,7 +76,7 @@ axios
 //       .post(`http://${address}:${port}/weather/subscribe`, {
 //         token,
 //         geo: { lon: -78.632560, lat: 35.523086 },
-//         apiKey: 'e4577289bec84a09aa12094c4b3eac071c733dbc80834fc5a8d02fe84d641dcb'
+//         apiKey: 'e4577289bec84a09aa12094c4b312341c733dbc80834fc5a8d02fe84d641dcb'
 //       })
 //       .then(function (response) {
 //         console.log(response.data)

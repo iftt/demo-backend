@@ -2,6 +2,6 @@ src
 .env
 dump.rdb
 test
-./rocksdb
+/rocksdb
 ambientWeather.db
 iftt.db
